@@ -1,4 +1,4 @@
-name: update-cctop
+name: Update cctop formula
 
 on:
   workflow_dispatch:
@@ -10,28 +10,34 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+
+      - name: Check for new cctop release
+        id: check
+        run: |
+          LATEST=$(curl -s https://api.github.com/repos/montanaflynn/cctop/releases/latest | jq -r .tag_name)
+          CURRENT=$(grep -oP 'v[\d.]+' Formula/cctop.rb | head -1)
+          echo "latest=$LATEST"
+          echo "current=$CURRENT"
+          if [ "$LATEST" != "$CURRENT" ]; then
+            echo "update=true" >> $GITHUB_OUTPUT
+            echo "version=$LATEST" >> $GITHUB_OUTPUT
+          else
+            echo "update=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Update formula
+        if: steps.check.outputs.update == 'true'
         run: |
-          # Get latest release tag
-          TAG=$(gh api repos/montanaflynn/cctop/releases/latest --jq '.tag_name')
-          echo "Latest release: $TAG"
+          VERSION=${{ steps.check.outputs.version }}
+          URL="https://github.com/montanaflynn/cctop/archive/refs/tags/${VERSION}.tar.gz"
+          SHA=$(curl -sL "$URL" | sha256sum | cut -d' ' -f1)
 
-          # Download source and compute SHA256
-          URL="https://github.com/montanaflynn/cctop/archive/refs/tags/${TAG}.tar.gz"
-          SHA=$(curl -sL "$URL" | shasum -a 256 | cut -d' ' -f1)
-          echo "SHA256: $SHA"
-
-          # Update formula
           sed -i "s|url \".*\"|url \"${URL}\"|" Formula/cctop.rb
           sed -i "s|sha256 \".*\"|sha256 \"${SHA}\"|" Formula/cctop.rb
 
-          # Commit and push
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add Formula/cctop.rb
-          git commit -m "chore: update cctop to ${TAG}" || echo "No changes"
+          git commit -m "Update cctop to ${VERSION}"
           git push
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
