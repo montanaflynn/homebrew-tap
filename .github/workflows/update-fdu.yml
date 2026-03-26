@@ -1,9 +1,7 @@
 name: Update fdu formula
 
 on:
-  schedule:
-    - cron: "0 */6 * * *" # check every 6 hours
-  workflow_dispatch: # manual trigger
+  workflow_dispatch: # triggered by fdu release workflow
 
 permissions:
   contents: write
