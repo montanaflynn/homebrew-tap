@@ -1,8 +1,8 @@
 class Fdu < Formula
   desc "Fast disk usage analyzer with a streaming TUI"
   homepage "https://github.com/montanaflynn/fdu"
-  url "https://github.com/montanaflynn/fdu/archive/refs/tags/v0.2.1.tar.gz"
-  sha256 "c8b004b3b4a841b4dd29dc9f82b6f33f6291a644e4e9aaa94e6fa72e94ac7480"
+  url "https://github.com/montanaflynn/fdu/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "07e529cc48ec8d3641ee1bc5f85ecd69e59ddba11d74d544aff44c663e7f043f"
   license "MIT"
 
   depends_on "rust" => :build
