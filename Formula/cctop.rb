@@ -1,8 +1,8 @@
 class Cctop < Formula
   desc "TUI for monitoring Claude Code sessions"
   homepage "https://github.com/montanaflynn/cctop"
-  url "https://github.com/montanaflynn/cctop/archive/refs/tags/v0.1.1.tar.gz"
-  sha256 "f122f92404ef261ee69324b86e99ddfa3f25675b5a60ea77f67a77e754511ba1"
+  url "https://github.com/montanaflynn/cctop/archive/refs/tags/v0.1.2.tar.gz"
+  sha256 "94fc27c15982bad0dff2079f25f07ca8ebb50eb05ec4a89ca0ed9667609e8da1"
   license "MIT"
 
   depends_on "go" => :build
