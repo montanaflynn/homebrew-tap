@@ -7,18 +7,18 @@ class Ht < Formula
   on_macos do
     on_arm do
       url "https://github.com/montanaflynn/headless-terminal/releases/download/v#{version}/ht-v#{version}-darwin-arm64.tar.gz"
-      sha256 "625a832c369659c59da264e47a5d96c83ecd923e88bcd6d5201ae96ea633932a"
+      sha256 "5669bc5d8ef9053ded1e6bcd19de8d1e42006e3c5a7ad8d44c4fde93a88148ac"
     end
   end
 
   on_linux do
     on_intel do
       url "https://github.com/montanaflynn/headless-terminal/releases/download/v#{version}/ht-v#{version}-linux-amd64.tar.gz"
-      sha256 "617b6a4839ac46796e0514d6880ff1df3d9620def15ed96c97c55e3a563f2d22"
+      sha256 "1be346ab2fc097f916e871d49587e3a99840e8b1865c09f58b87cf947a7da488"
     end
     on_arm do
       url "https://github.com/montanaflynn/headless-terminal/releases/download/v#{version}/ht-v#{version}-linux-arm64.tar.gz"
-      sha256 "1dedaa049c12cb075337139c73779214bd923c20fedfd5e4045175dad8f63f95"
+      sha256 "18af37f9f0093f8e1de589ab89b3854191cf466958de50800a4fe89a0112c47b"
     end
   end
 
