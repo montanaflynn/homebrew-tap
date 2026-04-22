@@ -1,24 +1,24 @@
 class Ht < Formula
   desc "Puppeteer for terminal UIs — drive vim, htop, nethack from a CLI or agent"
   homepage "https://github.com/montanaflynn/headless-terminal"
-  version "0.2.0"
+  version "0.2.1"
   license "MIT"
 
   on_macos do
     on_arm do
       url "https://github.com/montanaflynn/headless-terminal/releases/download/v#{version}/ht-v#{version}-darwin-arm64.tar.gz"
-      sha256 "7736868d96d315f93d69d7c08a7ab5868fd4b55aff677d1ad0e3b416b68a6be8"
+      sha256 "10bff25d6af57e9e998244a61a1b3b2f1d7e70657ac3b74812be6e03435affa6"
     end
   end
 
   on_linux do
     on_intel do
       url "https://github.com/montanaflynn/headless-terminal/releases/download/v#{version}/ht-v#{version}-linux-amd64.tar.gz"
-      sha256 "2b796e2c1d49edd3a523d9767d9a24a9d0a7b0efcad67c956b4e45230cf1a59d"
+      sha256 "393f32146e01deed089167731a21b6ad0e1c739f6fa000186bbc47c2614ac572"
     end
     on_arm do
       url "https://github.com/montanaflynn/headless-terminal/releases/download/v#{version}/ht-v#{version}-linux-arm64.tar.gz"
-      sha256 "e3d6d59037356e68f8483e35705ed9577577e0ccd2b2072cc422e305c84a2a59"
+      sha256 "c4af06a31eb7bbb6354a6c9ea4c1fa4a1118a723886fe5f1ce0a28a3b18d5f77"
     end
   end
 
