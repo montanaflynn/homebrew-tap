@@ -2,6 +2,7 @@ class Ht < Formula
   desc "Puppeteer for terminal UIs — drive vim, htop, nethack from a CLI or agent"
   homepage "https://github.com/montanaflynn/headless-terminal"
   version "0.1.0"
+  license "MIT"
 
   on_macos do
     on_arm do

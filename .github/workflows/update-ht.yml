@@ -1,0 +1,78 @@
+name: Update ht formula
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Get latest release
+        id: release
+        run: |
+          LATEST=$(curl -s https://api.github.com/repos/montanaflynn/headless-terminal/releases/latest | jq -r .tag_name)
+          VERSION="${LATEST#v}"
+          echo "tag=$LATEST" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Compute SHA256s
+        id: sha
+        run: |
+          TAG=${{ steps.release.outputs.tag }}
+          BASE="https://github.com/montanaflynn/headless-terminal/releases/download/${TAG}"
+          echo "macos_arm=$(curl -fsSL ${BASE}/ht-${TAG}-darwin-arm64.tar.gz | sha256sum | cut -d\  -f1)" >> "$GITHUB_OUTPUT"
+          echo "linux_amd=$(curl -fsSL ${BASE}/ht-${TAG}-linux-amd64.tar.gz  | sha256sum | cut -d\  -f1)" >> "$GITHUB_OUTPUT"
+          echo "linux_arm=$(curl -fsSL ${BASE}/ht-${TAG}-linux-arm64.tar.gz  | sha256sum | cut -d\  -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Update formula
+        run: |
+          cat > Formula/ht.rb << FORMULA
+          class Ht < Formula
+            desc "Puppeteer for terminal UIs — drive vim, htop, nethack from a CLI or agent"
+            homepage "https://github.com/montanaflynn/headless-terminal"
+            version "${{ steps.release.outputs.version }}"
+            license "MIT"
+
+            on_macos do
+              on_arm do
+                url "https://github.com/montanaflynn/headless-terminal/releases/download/v#{version}/ht-v#{version}-darwin-arm64.tar.gz"
+                sha256 "${{ steps.sha.outputs.macos_arm }}"
+              end
+            end
+
+            on_linux do
+              on_intel do
+                url "https://github.com/montanaflynn/headless-terminal/releases/download/v#{version}/ht-v#{version}-linux-amd64.tar.gz"
+                sha256 "${{ steps.sha.outputs.linux_amd }}"
+              end
+              on_arm do
+                url "https://github.com/montanaflynn/headless-terminal/releases/download/v#{version}/ht-v#{version}-linux-arm64.tar.gz"
+                sha256 "${{ steps.sha.outputs.linux_arm }}"
+              end
+            end
+
+            def install
+              bin.install "ht"
+            end
+
+            test do
+              assert_match "ht", shell_output("#{bin}/ht --help 2>&1")
+            end
+          end
+          FORMULA
+          sed -i "s/^          //" Formula/ht.rb
+          cat Formula/ht.rb
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/ht.rb
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Update ht to ${{ steps.release.outputs.version }}"
+          git push
